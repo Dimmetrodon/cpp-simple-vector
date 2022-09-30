@@ -41,6 +41,12 @@ public:
     // «апрещаем присваивание
     ArrayPtr& operator=(const ArrayPtr&) = delete;
 
+    ArrayPtr& operator=(ArrayPtr&& rhs)
+    {
+        ArrayPtr(std::move(rhs.Get()));
+        return *this;
+    }
+
     // ѕрекращает владением массивом в пам€ти, возвращает значение адреса массива
     // ѕосле вызова метода указатель на массив должен обнулитьс€
     [[nodiscard]] Type* Release() noexcept

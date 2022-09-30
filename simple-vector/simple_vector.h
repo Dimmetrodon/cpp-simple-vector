@@ -84,12 +84,20 @@ public:
     // Возвращает ссылку на элемент с индексом index
     Type& operator[](size_t index) noexcept
     {
+        if (index > size_)
+        {
+            throw std::out_of_range("");
+        }
         return arr_[index];
     }
 
     // Возвращает константную ссылку на элемент с индексом index
     const Type& operator[](size_t index) const noexcept
     {
+        if (index > size_)
+        {
+            throw std::out_of_range("");
+        }
         return arr_[index];
     }
 
@@ -240,6 +248,10 @@ public:
     // вместимость вектора должна увеличиться вдвое, а для вектора вместимостью 0 стать равной 1
     /*Iterator Insert(ConstIterator pos, const Type& value) 
     {
+        if (pos < begin() || pos > end())
+        {
+            throw std::out_of_range("");
+        }
         Iterator it = const_cast<Iterator>(pos);
         if (size_ != capacity_)
         {
@@ -270,6 +282,10 @@ public:
 
     Iterator Insert(ConstIterator pos, Type&& value)
     {
+        if (pos < begin() || pos > end())
+        {
+            throw std::out_of_range("");
+        }
         Iterator it = const_cast<Iterator>(pos);
         if (size_ != capacity_)
         {
@@ -302,14 +318,26 @@ public:
     void PopBack() noexcept 
     {
         arr_[size_] = 0;
+        if (size_ == 0)
+        {
+            throw std::invalid_argument("size = 0");
+        }
         --size_;
     }
 
     // Удаляет элемент вектора в указанной позиции
     Iterator Erase(ConstIterator pos) 
     {
+        if (pos < begin() || pos > end())
+        {
+            throw std::out_of_range("");
+        }
         Iterator it = const_cast<Iterator>(pos);
         std::move(it + 1, end(), it);
+        if (size_ == 0)
+        {
+            throw std::invalid_argument("size = 0");
+        }
         --size_;
         return it;
     }
@@ -328,13 +356,6 @@ public:
         {
             return;
         }
-        /*size_t size = size_;
-        SimpleVector new_vec(new_capacity);
-        std::copy(this->begin(), this->end(), new_vec.begin());
-        delete[] arr_.Get();
-        swap(new_vec);
-        capacity_ = new_capacity;
-        size_ = size;*/
         SimpleVector copy(new_capacity);
         size_t size = size_;
         std::copy(this->begin(), this->end(), copy.begin());
